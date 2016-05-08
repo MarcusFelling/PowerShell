@@ -1,6 +1,7 @@
 # Adds build link to associate work items
 # Runs as the last step in build definitions   
 
+# Encrypted password passed via build definition
 param(
 [string]$passwd
 )
@@ -9,8 +10,7 @@ Function UpdateWorkItemsWithBuildLink
 {      
     $tfsUrl = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" 
     $user = ""
-    # Encrypted password passed via build definition
-	$secpasswd = ConvertTo-SecureString $passwd -AsPlainText -Force
+    $secpasswd = ConvertTo-SecureString $passwd -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential($user, $secpasswd)
  
     # Uri to get associated work items: https://www.visualstudio.com/en-us/integrate/api/build/builds#GetbuilddetailsWorkitems
