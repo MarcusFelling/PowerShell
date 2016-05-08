@@ -7,10 +7,10 @@ param(
 
 Function AggregateCodeCoverageResults       
 {         
-	$definitionId = ""
+    $definitionId = ""
     $user = "" 
     # Encrypted password passed via build definition variable
-	$secpasswd = ConvertTo-SecureString $passwd -AsPlainText -Force
+    $secpasswd = ConvertTo-SecureString $passwd -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential($user, $secpasswd)
     
     # Use build api to get build IDs and build dates.
@@ -18,7 +18,8 @@ Function AggregateCodeCoverageResults
     $getBuilds = Invoke-RestMethod -Uri $buildUri -Method Get -Credential $credential   
 
     # Create object from results containing build date and build number
-    $buildList = $getBuilds | select @{Name="BuildDate"; Expression={$_.value.finishtime}},@{Name="BuildNumber"; Expression={$_.value.buildNumber}}
+    $buildList = $getBuilds | 
+    select @{Name="BuildDate"; Expression={$_.value.finishtime}},@{Name="BuildNumber"; Expression={$_.value.buildNumber}}
 
     # Build number will be used in code coverage Uri
     $buildNumbers = $buildList.BuildNumber
@@ -65,7 +66,6 @@ Function AggregateCodeCoverageResults
     }
      
     # Loop through and add build dates to coverage results output to CSV
-
     $(for ($i=0; $i -le $coverageResultsArray.Count;$i++)
     {
     'Build Date: {0} Coverage: {1}' -f $buildDatesArray[$i],$coverageResultsArray[$i]
