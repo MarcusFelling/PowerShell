@@ -1,6 +1,7 @@
 # Script to aggregate TFS 2015 build code coverage results for specified build definition
 # SSRS reports do not work with new build system (Non XAML) to provide this info as of Update 2 
 
+# Encrypted password passed via build definition variable
 param(
 [string]$passwd
 )
@@ -9,7 +10,6 @@ Function AggregateCodeCoverageResults
 {         
     $definitionId = ""
     $user = "" 
-    # Encrypted password passed via build definition variable
     $secpasswd = ConvertTo-SecureString $passwd -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential($user, $secpasswd)
     
