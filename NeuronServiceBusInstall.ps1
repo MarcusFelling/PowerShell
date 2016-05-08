@@ -54,8 +54,8 @@ Function NeuronDeploy
 Try
 {
     ValidateNeuronInstall
-	NeuronPreDeployCleanup
-	NeuronDeploy
+    NeuronPreDeployCleanup
+    NeuronDeploy
 }
 Catch
 {
