@@ -10,7 +10,7 @@ SSRS reports do not work with new web-based build system (Non XAML) to provide t
 ### UpdateTFSWorkItemsWithBuildLink.ps1
 
 Adds build link to associated work items.
-Runs as the last step in build definitions. 
+Runs as the last step in TFS 2015 web-based (non-XAML) build definitions. 
 
 ### SSISDeploy.ps1
 Script to deploy SSIS package (ISPAC) 
