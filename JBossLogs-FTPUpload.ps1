@@ -13,48 +13,48 @@ $a.WindowSize = $b
 switch($serverNumber){
         
         #Grp-Test
-     1 {$Dir0 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*"
-        $Dir1 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*"
-        $Dir2 = "\\$machineName\c$\logs\*"
+     1 {$Dir0 = "\\$machineName\f$\$JBossDir\server\$node\log\*"
+        $Dir1 = "\\$machineName\f$\$JBossDir\server\$node\log\*"
+        $Dir2 = "\\$machineName\f$\logs\*"
         $Environment = "Test"
         $indOrGroup = "Grp"}
         #Ind-Test
-     2 {$Dir0 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*" 
-        $Dir1 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*" 
-        $Dir2 = "\\$machineName\c$\logs\*" 
+     2 {$Dir0 = "\\$machineName\f$\$JBossDir\server\$node\log\*" 
+        $Dir1 = "\\$machineName\f$\$JBossDir\server\$node\log\*" 
+        $Dir2 = "\\$machineName\f$\logs\*" 
         $Environment = "Test"
         $indOrGroup = "Ind"}
         #Note-Express logs from stage/prod include both environments
         #Grp-Stage
-     3 {$Dir0 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*" 
-        $Dir1 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*" 
-        $Dir2 = "\\$machineName\c$\logs\*"
-        $Dir3 = "\\$machineName\c$\logs\*" 
+     3 {$Dir0 = "\\$machineName\f$\$JBossDir\server\$node\log\*" 
+        $Dir1 = "\\$machineName\f$\$JBossDir\server\$node\log\*" 
+        $Dir2 = "\\$machineName\f$\logs\*"
+        $Dir3 = "\\$machineName\f$\logs\*" 
         $Environment = "Stage"
         $indOrGroup = "Grp"}
         #Ind-Stage
-     4 {$Dir0 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*" 
-        $Dir1 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*" 
-        $Dir2 = "\\$machineName\c$\logs\*"
-        $Dir3 = "\\$machineName\c$\logs\*" 
+     4 {$Dir0 = "\\$machineName\f$\$JBossDir\server\$node\log\*" 
+        $Dir1 = "\\$machineName\f$\$JBossDir\server\$node\log\*" 
+        $Dir2 = "\\$machineName\f$\logs\*"
+        $Dir3 = "\\$machineName\f$\logs\*" 
         $Environment = "Stage"
         $indOrGroup = "Ind"}
         #Grp-Production
-     5 {$Dir0 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*" 
-        $Dir1 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*" 
-        $Dir2 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*"  
-        $Dir3 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*"
-        $Dir4 = "\\$machineName\c$\logs\*"
-        $Dir5 = "\\$machineName\c$\logs\*" 
+     5 {$Dir0 = "\\$machineName\f$\$JBossDir\server\$node\log\*" 
+        $Dir1 = "\\$machineName\f$\$JBossDir\server\$node\log\*" 
+        $Dir2 = "\\$machineName\f$\$JBossDir\server\$node\log\*"  
+        $Dir3 = "\\$machineName\f$\$JBossDir\server\$node\log\*"
+        $Dir4 = "\\$machineName\f$\logs\*"
+        $Dir5 = "\\$machineName\f$\logs\*" 
         $Environment = "Production"
         $indOrGroup = "Grp"}
         #Ind Production
-     6 {$Dir0 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*" 
-        $Dir1 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*" 
-        $Dir2 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*"  
-        $Dir3 = "\\$machineName\c$\jboss-5.1.0.GA\server\$node\log\*"
-        $Dir4 = "\\$machineName\c$\logs\*"
-        $Dir5 = "\\$machineName\c$\logs\*" 
+     6 {$Dir0 = "\\$machineName\f$\$JBossDir\server\$node\log\*" 
+        $Dir1 = "\\$machineName\f$\$JBossDir\server\$node\log\*" 
+        $Dir2 = "\\$machineName\f$\$JBossDir\server\$node\log\*"  
+        $Dir3 = "\\$machineName\f$\$JBossDir\server\$node\log\*"
+        $Dir4 = "\\$machineName\f$\logs\*"
+        $Dir5 = "\\$machineName\f$\logs\*" 
         $Environment = "Production"
         $indOrGroup = "Ind"}
      default {"Directory could not be determined."}
