@@ -8,7 +8,6 @@ param(
 
 Function UpdateWorkItemsWithBuildLink      
 {      
-    $tfsUrl = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" 
     $user = ""
     $secpasswd = ConvertTo-SecureString $passwd -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential($user, $secpasswd)
@@ -38,7 +37,7 @@ Function UpdateWorkItemsWithBuildLink
     ForEach($WorkItemID in $WorkitemIDs)
         {
         # Uri to add hyperlink to work items: https://www.visualstudio.com/integrate/api/wit/work-items#UpdateworkitemsAddalink
-        [uri] $WorkItemLinkUri = $tfsUrl + "_apis/wit/workitems/" + $WorkItemID +"?api-version=1.0"
+        [uri] $WorkItemLinkUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "_apis/wit/workitems/" + $WorkItemID +"?api-version=1.0"
         write-host $WorkItemLinkUri
         
 $JSONBody= @"
@@ -47,7 +46,7 @@ $JSONBody= @"
     "path": "/relations/-",
     "value": {
         "rel": "Hyperlink",
-        "url": " $tfsUrl$env:SYSTEM_TEAMPROJECT/_build#buildId=$env:BUILD_BUILDID&_a=summary"
+        "url": " $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$env:SYSTEM_TEAMPROJECT/_build#buildId=$env:BUILD_BUILDID&_a=summary"
     }
     }]
 "@
