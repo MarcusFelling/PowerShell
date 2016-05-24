@@ -1,4 +1,4 @@
-﻿# Sends email if drive has < 5 GB free space. 
+﻿# Sends email if drive has less than 5 GB free space. 
 
 Function checkDiskSpace
 {
@@ -15,27 +15,28 @@ Function checkDiskSpace
     Where-Object { $_.DriveType -eq 3 } | 
     Select-Object SystemName,VolumeName,FreeSpace,Size | 
     
-    foreach {
-    # If FreeSpace is greater than 5GB then do nothing
-    If ($_.FreeSpace -gt 5000000000)
-        {
-            #do nothing
-        }
-    # Else, if FreeSpace is less than 5GB then send email
-    Else
-        {
-            # Set e-mail subject and body using disk volume and machine name info
-            $subject = “Attention: Disk space is running low on ” + $_.SystemName + “”;
-            $body = $_.VolumeName + ” drive has less than 5GB.`n”
+    foreach 
+    {
+        # If FreeSpace is greater than 5GB then do nothing
+        If ($_.FreeSpace -gt 5000000000)
+            {
+                #do nothing
+            }
+        # Else, if FreeSpace is less than 5GB then send email
+        Else
+            {
+                # Set e-mail subject and body using disk volume and machine name info
+                $subject = “Attention: Disk space is running low on ” + $_.SystemName + “”;
+                $body = $_.VolumeName + ” drive has less than 5GB.`n”
 
-            # Send e-mail
-            $smtpClient = New-Object Net.Mail.SmtpClient($smtpServer);
-            $emailFrom  = New-Object Net.Mail.MailAddress $smtpFrom, $smtpFrom;
-            $emailTo    = New-Object Net.Mail.MailAddress $smtpTo, $smtpTo;
-            $mailMsg    = New-Object Net.Mail.MailMessage($emailFrom, $emailTo, $subject, $body);
-            $smtpClient.Send($mailMsg)
+                # Send e-mail
+                $smtpClient = New-Object Net.Mail.SmtpClient($smtpServer);
+                $emailFrom  = New-Object Net.Mail.MailAddress $smtpFrom, $smtpFrom;
+                $emailTo    = New-Object Net.Mail.MailAddress $smtpTo, $smtpTo;
+                $mailMsg    = New-Object Net.Mail.MailMessage($emailFrom, $emailTo, $subject, $body);
+                $smtpClient.Send($mailMsg)
 
-        }
+            }
     }   
 }
 Try
