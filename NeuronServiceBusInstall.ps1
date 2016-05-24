@@ -34,14 +34,14 @@ Function NeuronPreDeployCleanup
 
 Function NeuronDeploy 
 { 
-	# Copy $Company.*.Neuron dll's and SqlServerTypes from bin to adapters folder 
-	Copy-Item .\bin\$Company.*.Neuron.dll C:\ESB\Neuron\DEFAULT\Adapters -verbose -Force
+	# Copy $projectName.*.Neuron dll's and SqlServerTypes from bin to adapters folder 
+	Copy-Item .\bin\$projectName.*.Neuron.dll C:\ESB\Neuron\DEFAULT\Adapters -verbose -Force
 	Copy-Item .\bin\Debug\SqlServerTypes C:\ESB\Neuron\DEFAULT\Adapters\SqlServerTypes -Force -recurse
 	
 	# Assemblies to include in default instance folder
-	$instanceIncludes = "$Company.*","EntityFramework.*.dll", "EntityFramework.dll", "AutoMapper*.dll", "Castle*.dll", "$Company.*.dll"
+	$instanceIncludes = "$projectName.*","example.*.dll", "example.dll"
 	# Assemblies to exclude from the default instance folder
-	$instanceExclude = "$Company.*.Neuron*"
+	$instanceExclude = "$projectName.*.Neuron*"
 	
 	# Copy instance assemblies from C:\Neuron to C:\ESB\Neuron\Default
 	ForEach($instanceInclude in $instanceIncludes)
