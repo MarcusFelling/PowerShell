@@ -121,5 +121,5 @@ foreach($item in (dir "\example\" "*.7z")){
 
 if($sendEmail -eq 1)
 {
-   Send-MailMessage -To "Bob@Bob.com" -SmtpServer mail.healthpartners.com -Subject "$indOrGroup - $Environment logs have been uploaded to FTP"
+   Send-MailMessage -To "Bob@Bob.com" -SmtpServer mail.bob.com -Subject "$indOrGroup - $Environment logs have been uploaded to FTP"
 }
