@@ -24,3 +24,9 @@ Sets IIS properties for faster load times.
 
 ### RegisterGACAssemblies.ps1
 UnRegisters/Registers list of assemblies to GAC.
+
+### UndeliverableMessageExport.ps1
+
+This script uses ExportOSCEXOEmailMessage PowerShell module (in addition to the Exchange Web API) to connect to the O365 X mailbox, 
+search for emails according to X criteria during the last week, exports them, 
+filters the emails for email addresses and saves them to undeliverableEmailList.txt, then sends email with attachment
