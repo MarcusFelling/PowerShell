@@ -12,6 +12,10 @@ SSRS reports do not work with new web-based build system (non XAML) to provide t
 Adds build link to associated work items.
 Runs as the last step in TFS 2015 web-based (non XAML) build definitions. 
 
+### GetCommitAssociatedToBuild.ps1
+
+Gets Git commit hash from last successful build from specified TFS build defintion, returns value in variable to be used in other build steps.
+
 ### SSISDeploy.ps1
 Script to deploy SSIS package (ISPAC) 
 
