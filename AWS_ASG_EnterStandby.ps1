@@ -1,4 +1,4 @@
-﻿# Part 1 of 2
+# Part 1 of 2
 # Part 1 Places EC2 instance into autoscaling group's standby mode.
 # Part 2 Exits standby mode and waits for instance to be InService.
 param (
@@ -29,9 +29,8 @@ Catch
 # and there is no need to place instances into StandBy
 Try
 {
-
-		$stackName = Get-EC2Tag -Filter @{ Name="key";Values="aws:cloudformation:stack-name"},@{ Name="resource-id";Values=$instanceID}
-		$stackInfo = Get-CFNStack -StackName $stackName.Value
+	$stackName = Get-EC2Tag -Filter @{ Name="key";Values="aws:cloudformation:stack-name"},@{ Name="resource-id";Values=$instanceID}
+	$stackInfo = Get-CFNStack -StackName $stackName.Value
 
 	if($stackInfo.StackStatus -eq "UPDATE_IN_PROGRESS"){
 		Write-Host "CloudFormation stack updating, this Octopus step will now be skipped."
@@ -83,12 +82,12 @@ Try
         }
         ElseIf($instanceState -eq "Standby")
         {
-            Write-Host "Instance already in standby"
+		Write-Host "Instance already in standby"
         }
         Else
         {
-           	Write-Error -Message "Error: Instance is not InService or Standby mode." -Exception $_.Exception
-	        Exit 1
+		Write-Error -Message "Error: Instance is not InService or Standby mode." -Exception $_.Exception
+		Exit 1
         }
 }
 Catch
