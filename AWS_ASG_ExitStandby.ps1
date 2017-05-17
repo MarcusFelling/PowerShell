@@ -1,4 +1,4 @@
-﻿# Part 2 of 2
+# Part 2 of 2
 # Part 1 Places EC2 instance into autoscaling group's standby mode.
 # Part 2 Exits standby mode and waits for instance to be InService.
 
@@ -16,7 +16,7 @@ Try
 	If ($response)
 	{
 		$instanceId = $response
-        Write-Host "Instance ID: $instanceId"
+		Write-Host "Instance ID: $instanceId"
 	}
 	Else
 	{
@@ -36,8 +36,8 @@ Catch
 Try
 {
 
-		$stackName = Get-EC2Tag -Filter @{ Name="key";Values="aws:cloudformation:stack-name"},@{ Name="resource-id";Values=$instanceID}
-		$stackInfo = Get-CFNStack -StackName $stackName.Value
+	$stackName = Get-EC2Tag -Filter @{ Name="key";Values="aws:cloudformation:stack-name"},@{ Name="resource-id";Values=$instanceID}
+	$stackInfo = Get-CFNStack -StackName $stackName.Value
 
 	if($stackInfo.StackStatus -eq "UPDATE_IN_PROGRESS"){
 		Write-Host "CloudFormation stack updating, this Octopus step will now be skipped."
@@ -54,7 +54,7 @@ Catch
 Try
 {
 	$ASGName = $OctopusParameters["Octopus.Action[$ASGEnterStandbyDeployStep].Output.$ASGNameVariable"]
-    Write-Host "Auto Scaling Group Name: $ASGName"
+	Write-Host "Auto Scaling Group Name: $ASGName"
 	If (!$ASGName)
 	{
 		Write-Error -Message "Returned Auto Scaling Group Name does not appear to be valid"
@@ -96,9 +96,7 @@ Try
 		{
 			Write-Host "$checkCount/$maxRegistrationCheckCount Attempts"
 		}
-
 		$instanceState = (Get-ASAutoScalingInstance -InstanceId $instanceId).LifecycleState
-
 		Write-Host "Current instance state: $instanceState"
 	}
 
