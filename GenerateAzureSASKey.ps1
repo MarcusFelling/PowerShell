@@ -1,5 +1,3 @@
-﻿
-
 $storageAccountName = ""
 $storageAccountKey = ""
 $container = ""
