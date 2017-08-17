@@ -1,4 +1,4 @@
-﻿<#
+<#
 .DESCRIPTION
    Script to update Octopus variable via Octopus API.
    Can be run manually or automated through an Orchestration tool/build system
