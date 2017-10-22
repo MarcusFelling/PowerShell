@@ -69,6 +69,6 @@ Catch
     $reader.DiscardBufferedData()
     $responseBody = $reader.ReadToEnd();
     write-host $responseBody
-    exit 1
+    exit 1 # Fail build if errors
 }
 
