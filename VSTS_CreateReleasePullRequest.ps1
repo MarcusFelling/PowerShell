@@ -19,7 +19,7 @@ Param(
 
 Function CreatePullRequest     
 {       
-    # Use VSTS REST API for Pull Requests: POST https://{instance}/DefaultCollection/{project}/_apis/git/repositories/{repository}/pullRequests?api-version={version}
+    # Contruct Uri for Pull Requests: https://{instance}/DefaultCollection/{project}/_apis/git/repositories/{repository}/pullRequests?api-version={version}
     # Note: /DefaultCollection/ is required for all VSTS accounts
     # Environment variables are populated when running via VSTS build
     [uri] $PRUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "/DefaultCollection/" + $env:SYSTEM_TEAMPROJECT + "/_apis/git/repositories/$Repository/pullRequests?api-version=$APIVersion"
