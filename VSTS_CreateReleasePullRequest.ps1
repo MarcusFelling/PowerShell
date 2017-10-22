@@ -8,10 +8,10 @@
 .NOTES
     -Existing branch policies are automatically applied.
 #>
-param(
+Param(
     $script:Repository, # Repository to create PR in
-    $script:SourceRefName, # The name of the source branch. 
-    $script:TargetRefName, # The name of the target branch.
+    $script:SourceRefName, # The name of the source branch without ref.
+    $script:TargetRefName, # The name of the target branch without ref.
     $script:APIVersion, # API Version (currently api-version=3.0)
     $script:ReviewerGUID, # Reviewer GUID. Find in existing PR by using GET https://{instance}/DefaultCollection/{project}/_apis/git/repositories/{repository}/pullRequests/{pullrequestid}?api-version=3.0
     $script:PAT # Personal Access token passed via encrypted build definition variable. It's recommended to use a service account.
@@ -21,6 +21,7 @@ Function CreatePullRequest
 {       
     # Use VSTS REST API for Pull Requests: POST https://{instance}/DefaultCollection/{project}/_apis/git/repositories/{repository}/pullRequests?api-version={version}
     # Note: /DefaultCollection/ is required for all VSTS accounts
+    # Environment variables are populated when running via VSTS build
     [uri] $PRUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "/DefaultCollection/" + $env:SYSTEM_TEAMPROJECT + "/_apis/git/repositories/$Repository/pullRequests?api-version=$APIVersion"
 
     # Base64-encodes the Personal Access Token (PAT) appropriately
@@ -47,8 +48,8 @@ Function CreatePullRequest
     }
 "@
 
-    # Use URI and JSON above to apply approver policy to specified branch
-    $Response = Invoke-RestMethod -Uri $PRUri -Method Post -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $Base64AuthInfo)} -Body $JSONBody
+    # Use URI and JSON above to invoke the REST call and capture the response.
+    $Response = Invoke-RestMethod -Uri $PRUri -Method Post -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $Base64AuthInfo)} -Body $JSONBody  
 
     # Get new PR info from response
     $script:NewPRID = $Response.pullRequestId
@@ -68,7 +69,7 @@ Catch
     $reader.BaseStream.Position = 0
     $reader.DiscardBufferedData()
     $responseBody = $reader.ReadToEnd();
-    write-host $responseBody
+    Write-Host $responseBody
     exit 1 # Fail build if errors
 }
 
