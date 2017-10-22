@@ -1,31 +1,31 @@
 ﻿<#
 .SYNOPSIS
-    Uses the VSTS REST API to create pull request
-    https://www.visualstudio.com/en-us/docs/integrate/api/git/pull-requests/pull-requests
+    Uses the VSTS REST API to create pull request    
 .DESCRIPTION
     This script uses the VSTS REST API to create a Pull Request in the specified
-    repository, source and target branches.
+    repository, source and target branches. Intended to run via VSTS Build using a build step for each repository.
+    https://www.visualstudio.com/en-us/docs/integrate/api/git/pull-requests/pull-requests
 .NOTES
-    Build definition that is triggered at the end of the sprint runs this script for each repository 
-    to create PR's using source branch: develop target branch: Release
+    -Existing branch policies are automatically applied.
 #>
 param(
     $script:Repository, # Repository to create PR in
     $script:SourceRefName, # The name of the source branch. 
     $script:TargetRefName, # The name of the target branch.
     $script:APIVersion, # API Version (currently api-version=3.0)
-    $script:ReviewerGUID, # Reviewer GUID. Find in existing PR by using GET https://outselldev.visualstudio.com/DefaultCollection/DEP/_apis/git/repositories/DEP/pullRequests/$PullRequestID?api-version=3.0
-    $script:User, # Null when using PAT 
-    $script:PAT # Encrypted token passed via build definition
+    $script:ReviewerGUID, # Reviewer GUID. Find in existing PR by using GET https://{instance}/DefaultCollection/{project}/_apis/git/repositories/{repository}/pullRequests/{pullrequestid}?api-version=3.0
+    $script:PAT # Personal Access token passed via encrypted build definition variable. It's recommended to use a service account.
 )
 
 Function CreatePullRequest     
 {       
-    # Use VSTS REST API: POST https://{instance}/DefaultCollection/{project}/_apis/git/repositories/{repository}/pullRequests?api-version={version}
-    [uri] $global:PRUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "/DefaultCollection/" + $env:SYSTEM_TEAMPROJECT + "/_apis/git/repositories/$Repository/pullRequests?api-version=$APIVersion"
+    # Use VSTS REST API for Pull Requests: POST https://{instance}/DefaultCollection/{project}/_apis/git/repositories/{repository}/pullRequests?api-version={version}
+    # Note: /DefaultCollection/ is required for all VSTS accounts
+    [uri] $PRUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "/DefaultCollection/" + $env:SYSTEM_TEAMPROJECT + "/_apis/git/repositories/$Repository/pullRequests?api-version=$APIVersion"
 
     # Base64-encodes the Personal Access Token (PAT) appropriately
-    $Base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $User,$PAT)))     
+    # This is required to pass PAT through HTTP header in Invoke-RestMethod bellow
+    $Base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$PAT)))     
 
     # Prepend refs/heads/ to branches so shortened version can be used in title
     $Ref = "refs/heads/"
