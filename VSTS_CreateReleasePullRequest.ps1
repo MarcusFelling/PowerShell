@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Uses the VSTS REST API to create pull request    
 .DESCRIPTION
@@ -9,12 +9,24 @@
     -Existing branch policies are automatically applied.
 #>
 Param(
-    $script:Repository, # Repository to create PR in
-    $script:SourceRefName, # The name of the source branch without ref.
-    $script:TargetRefName, # The name of the target branch without ref.
-    $script:APIVersion, # API Version (currently api-version=3.0)
-    $script:ReviewerGUID, # Reviewer GUID. Find in existing PR by using GET https://{instance}/DefaultCollection/{project}/_apis/git/repositories/{repository}/pullRequests/{pullrequestid}?api-version=3.0
-    $script:PAT # Personal Access token passed via encrypted build definition variable. It's recommended to use a service account.
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]$script:Repository, # Repository to create PR in
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]$script:SourceRefName, # The name of the source branch without ref.
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]$script:TargetRefName, # The name of the target branch without ref.
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]$script:APIVersion, # API Version (currently api-version=3.0)
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]$script:ReviewerGUID, # Reviewer GUID. Find in existing PR by using GET https://{instance}/DefaultCollection/{project}/_apis/git/repositories/{repository}/pullRequests/{pullrequestid}?api-version=3.0
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]$script:PAT # Personal Access token passed via encrypted build definition variable. It's recommended to use a service account.
 )
 
 Function CreatePullRequest     
@@ -58,9 +70,9 @@ Function CreatePullRequest
 
 Try
 {
-    write-host "Creating PR in $Repository repository: Source branch $SourceRefName Target Branch: $TargetRefName"
+    "Creating PR in $Repository repository: Source branch $SourceRefName Target Branch: $TargetRefName"
     CreatePullRequest
-    write-host "Created PR $NewPRID`: $NewPRURL"
+    "Created PR $NewPRID`: $NewPRURL"
 }
 Catch
 {
@@ -69,7 +81,6 @@ Catch
     $reader.BaseStream.Position = 0
     $reader.DiscardBufferedData()
     $responseBody = $reader.ReadToEnd();
-    Write-Host $responseBody
-    exit 1 # Fail build if errors
+    $responseBody
+    Exit 1 # Fail build if errors
 }
-
