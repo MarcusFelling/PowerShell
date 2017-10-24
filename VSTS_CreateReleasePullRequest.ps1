@@ -1,32 +1,54 @@
 <#
-.SYNOPSIS
-    Uses the VSTS REST API to create pull request    
-.DESCRIPTION
-    This script uses the VSTS REST API to create a Pull Request in the specified
-    repository, source and target branches. Intended to run via VSTS Build using a build step for each repository.
-    https://www.visualstudio.com/en-us/docs/integrate/api/git/pull-requests/pull-requests
-.NOTES
-    -Existing branch policies are automatically applied.
+    .SYNOPSIS
+        Uses the VSTS REST API to create pull request   
+     
+    .DESCRIPTION
+        This script uses the VSTS REST API to create a Pull Request in the specified
+        repository, source and target branches. Intended to run via VSTS Build using a build step for each repository.
+        https://www.visualstudio.com/en-us/docs/integrate/api/git/pull-requests/pull-requests
+
+    .NOTES
+        Existing branch policies are automatically applied.
+
+    .PARAMETER Repository
+        Repository to create PR in
+    
+    .PARAMETER SourceRefName
+        The name of the source branch without ref.
+    
+    .PARAMETER TargetRefName
+        The name of the target branch without ref.
+    
+    .PARAMETER APIVersion
+        API versions are in the format {major}.{minor}[-{stage}[.{resource-version}]] - For example, 1.0, 1.1, 1.2-preview, 2.0.
+    
+    .PARAMETER ReviewerGUID
+        ID(s) of the initial reviewer(s). Not mandadory. 
+        Can be found in existing PR by using GET https://{instance}/DefaultCollection/{project}/_apis/git/repositories/{repository}/pullRequests/{pullrequestid}?api-version=3.0
+
+    .PARAMETER PAT
+        Personal Access token. It's recommended to use a service account and pass via encrypted build definition variable.
 #>
+[CmdletBinding()]
 Param(
-    [Parameter(Mandatory)]
+    [Parameter(Position=0,Mandatory=$true,ValueFromPipeline)]
     [ValidateNotNullOrEmpty()]
-    [string]$script:Repository, # Repository to create PR in
-    [Parameter(Mandatory)]
+    [string]$script:Repository,
+    [Parameter(Position=1,Mandatory=$true,ValueFromPipeline)]
     [ValidateNotNullOrEmpty()]
-    [string]$script:SourceRefName, # The name of the source branch without ref.
-    [Parameter(Mandatory)]
+    [string]$script:SourceRefName,
+    [Parameter(Position=2,Mandatory=$true,ValueFromPipeline)]
     [ValidateNotNullOrEmpty()]
-    [string]$script:TargetRefName, # The name of the target branch without ref.
-    [Parameter(Mandatory)]
+    [string]$script:TargetRefName,
+    [Parameter(Position=3,Mandatory=$true,ValueFromPipeline)]
     [ValidateNotNullOrEmpty()]
-    [string]$script:APIVersion, # API Version (currently api-version=3.0)
-    [Parameter(Mandatory)]
+    [string]$script:APIVersion,
+    [Parameter(Position=4,Mandatory=$true,ValueFromPipeline)]
     [ValidateNotNullOrEmpty()]
-    [string]$script:ReviewerGUID, # Reviewer GUID. Find in existing PR by using GET https://{instance}/DefaultCollection/{project}/_apis/git/repositories/{repository}/pullRequests/{pullrequestid}?api-version=3.0
-    [Parameter(Mandatory)]
+    [int]$script:ReviewerGUID, 
+    [Parameter(Position=5,Mandatory=$false,ValueFromPipeline)]
     [ValidateNotNullOrEmpty()]
-    [string]$script:PAT # Personal Access token passed via encrypted build definition variable. It's recommended to use a service account.
+    [string]$script:PAT 
 )
 
 Function CreatePullRequest     
@@ -38,30 +60,48 @@ Function CreatePullRequest
 
     # Base64-encodes the Personal Access Token (PAT) appropriately
     # This is required to pass PAT through HTTP header in Invoke-RestMethod bellow
-    $Base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$PAT)))     
+    $User = "" # Not needed when using PAT, can be set to anything
+    $Base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $User,$PAT)))     
 
     # Prepend refs/heads/ to branches so shortened version can be used in title
     $Ref = "refs/heads/"
     $SourceBranch = "$Ref" + "$SourceRefName"
     $TargetBranch = "$Ref" + "$TargetRefName"
 
-    # JSON for creating PR
-    $JSONBody= @"
-    {
-      "sourceRefName": "$SourceBranch",
-      "targetRefName": "$TargetBranch",
-      "title": "Merge $sourceRefName to $targetRefName",
-      "description": "PR Created automajically via REST API ",
-      "reviewers": [
+    # JSON for creating PR with Reviewer specified
+    If($ReviewerGUID){
+        $JSONBody= @"
         {
-          "id": { $ReviewerGUID }
+            "sourceRefName": "$SourceBranch",
+            "targetRefName": "$TargetBranch",
+            "title": "Merge $sourceRefName to $targetRefName",
+            "description": "PR Created automajically via REST API ",
+            "reviewers": [
+            {
+                "id": { $ReviewerGUID }
+            }
+            ]
         }
-      ]
-    }
 "@
+    }
+    Else{
+        # JSON for creating PR without Reviewer specified
+        $JSONBody= @"
+        {
+          "sourceRefName": "$SourceBranch",
+          "targetRefName": "$TargetBranch",
+          "title": "Merge $sourceRefName to $targetRefName",
+          "description": "PR Created automajically via REST API ",
+        }
+"@
+    }
 
     # Use URI and JSON above to invoke the REST call and capture the response.
-    $Response = Invoke-RestMethod -Uri $PRUri -Method Post -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $Base64AuthInfo)} -Body $JSONBody  
+    $Response = Invoke-RestMethod -Uri $PRUri `
+                                  -Method Post `
+                                  -ContentType "application/json" `
+                                  -Headers @{Authorization=("Basic {0}" -f $Base64AuthInfo)} `
+                                  -Body $JSONBody  
 
     # Get new PR info from response
     $script:NewPRID = $Response.pullRequestId
