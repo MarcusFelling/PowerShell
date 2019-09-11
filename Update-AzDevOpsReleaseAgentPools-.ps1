@@ -1,6 +1,6 @@
 <#
 .Description
-   Script used to bulk update Azure Pipeline build and release definition's agent pools to Default
+   Script used to bulk update Azure Pipeline release definition's and set agent pools to Default
 #>
 
 $PAT = "6up2qi26kkrcetyqruudggvbqwj75f7t4jw2bcjbkcno3yiisceq"
