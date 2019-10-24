@@ -30,5 +30,5 @@ ForEach($DefinitionID in $DefinitionIDs){
     $Definition = $GetDefinitionsUriResponse | ConvertTo-Json -Depth 100
 
     # Use updated response to update definition
-    $script:UpdateDefinitionURI = "$TFSBaseURL/GRiDS/_apis/release/definitions?api-version=5.0"
+    $script:UpdateDefinitionURI = "$TFSBaseURL/$Project/_apis/release/definitions?api-version=5.0"
     $UpdatedDefinition = Invoke-RestMethod -Uri $UpdateDefinitionURI -Method Put -ContentType application/json -Headers @{Authorization=("Basic {0}" -f $Base64AuthInfo)} -Body $Definition
